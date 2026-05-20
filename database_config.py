@@ -1,34 +1,25 @@
-# database_config.py
-
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 Base = declarative_base()
 
-engine = None
-SessionLocal = None
+database_url = os.getenv("DATABASE_URL")
 
+if not database_url:
+    raise ValueError("DATABASE_URL not set")
 
-def init_db():
-    global engine, SessionLocal
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
 
-    database_url = os.getenv("DATABASE_URL")
+engine = create_engine(
+    database_url,
+    pool_pre_ping=True,
+    connect_args={"sslmode": "require"}
+)
 
-    if not database_url:
-        raise ValueError("DATABASE_URL not set")
-
-    if database_url.startswith("postgres://"):
-        database_url = database_url.replace("postgres://", "postgresql://", 1)
-
-    engine = create_engine(
-        database_url,
-        pool_pre_ping=True,
-        connect_args={"sslmode": "require"}
-    )
-
-    SessionLocal = sessionmaker(
-        autocommit=False,
-        autoflush=False,
-        bind=engine
-    )
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
