@@ -3,13 +3,14 @@ from student.api import student_auth, file_upload, student_api
 from company.api import company_api, company_auth, job_creation
 from student.models import StudentBase
 from company.models import CompanyBase
-from database_config import engine
+from database_config import engine, init_db
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
 @app.on_event("startup")
 def startup():
+    init_db()
     StudentBase.metadata.create_all(bind = engine)
     CompanyBase.metadata.create_all(bind = engine)
 
