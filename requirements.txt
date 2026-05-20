@@ -13,7 +13,7 @@ PyPDF2
 python-docx
 ipykernel
 PyPDF
-psycopg2
+psycopg2-binary
 python-jose
 passlib
 bcrypt==4.0.1
