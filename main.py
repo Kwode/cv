@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from student.api import student_auth, file_upload
-from company.api import company_auth, job_creation
+from student.api import student_auth, file_upload, student_api
+from company.api import company_api, company_auth, job_creation
 from student.models import StudentBase
 from company.models import CompanyBase
 from database_config import engine
@@ -21,6 +21,8 @@ app.add_middleware(
 )
 
 app.include_router(student_auth.router)
+app.include_router(student_api.router)
 app.include_router(company_auth.router)
+app.include_router(company_api.router)
 app.include_router(job_creation.router)
 app.include_router(file_upload.router)

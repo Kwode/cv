@@ -10,7 +10,7 @@ from student.models import Student
 router = APIRouter()
 
 @router.post('/register/student', response_model=StudentResponse)
-def register(student: StudentRegister, db: Session = Depends(get_db)):
+def register_student_endpoint(student: StudentRegister, db: Session = Depends(get_db)):
     existing_user = db.query(Student).filter(Student.email == student.email).first()
 
     if existing_user:
@@ -21,5 +21,5 @@ def register(student: StudentRegister, db: Session = Depends(get_db)):
     return new_student
 
 @router.post('/login/student')
-def login(student: StudentLogin, db: Session = Depends(get_db)):
+def login_student_endpoint(student: StudentLogin, db: Session = Depends(get_db)):
     return student_login(db, student)

@@ -34,6 +34,8 @@ def create_job(db: Session, job: JobCreate, company_id: str):
     db.commit()
     db.refresh(new_job)
 
+    print("CREATE JOB FUNCTION RUNNING")
+
     store_job_in_vector_db(
         job=new_job,
         job_id=new_job.id,

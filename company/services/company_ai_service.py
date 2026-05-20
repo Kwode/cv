@@ -1,13 +1,13 @@
-from langchain_openai import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_chroma import Chroma
 from dotenv import load_dotenv
 from typing import List
 
 load_dotenv()
 
-# ---------------------------
-# SINGLETONS (IMPORTANT FIX)
-# ---------------------------
+# =========================
+# VECTOR DB
+# =========================
 
 embeddings = OpenAIEmbeddings()
 
@@ -17,8 +17,11 @@ vectorstore = Chroma(
     embedding_function=embeddings
 )
 
+# =========================
+# HELPERS
+# =========================
 
-def safe_join(value) -> str:
+def safe_join(value):
     if not value:
         return ""
     if isinstance(value, list):
@@ -40,18 +43,22 @@ Experience Level: {job.experience_level}
 """.strip()
 
 
+# =========================
+# STORE JOB
+# =========================
+
 def store_job_in_vector_db(job, job_id: str, company_id: str):
+
     job_text = format_job_text(job)
 
     vectorstore.add_texts(
         texts=[job_text],
         metadatas=[{
-            "job_id": job_id,
-            "company_id": company_id
+            "job_id": str(job_id),
+            "company_id": str(company_id)
         }]
     )
 
-    # Chroma persists automatically depending on version
     return {
         "status": "success",
         "job_id": job_id
